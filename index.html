@@ -9,26 +9,39 @@
 </head>
 <body>
 
-    <div class="banner">
-        <!-- <h1>2020 Rays Sim standings</h1> -->
+    <header>
+    <div class="overlay"></div>
+    <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
+        <source src="https://raw.githubusercontent.com/double-dose-larry/2020_rays_sim/master/rnsdeg.mp4" type="video/mp4">
+    </video>
+    <div class="container h-100">
+        <div class="d-flex h-100 text-center align-items-center">
+        <div class="w-100 text-white">
+            <h1 class="display-3"> <a href="https://www.youtube.com/channel/UCSwicur-zd57UFxhLWMdDMg/videos" style="text-decoration: none; color:whitesmoke; font-family:Arial, Helvetica, sans-serif;">2020 Rays Sim</a></h1>
+            <p class="lead mb-0">Current Standings for 2020 Rays Sim</p>
+        </div>
+        </div>
     </div>
+    </header>
 
     <div id="app"> 
         <table class="table">
             <thead class="thead-light">
                 <tr>
-                <th scope="col">Division</th>
                 <th scope="col">Team</th>
                 <th scope="col">Wins</th>
                 <th scope="col">Losses</th>
+                <th scope="col">Runs Scored</th>
+                <th scope="col">Runs Against</th>
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="item in standings">
-                <th scope="row">{{ item.division }} </th>
-                <td>{{ item.team }}</td>
+                <tr v-for="item in alEast">
+                <td scope="row">{{ item.team }}</td>
                 <td>{{ item.wins }}</td>
                 <td>{{ item.losses }}</td>
+                <td>{{ item.runs }}</td>
+                <td>{{ item.runsAgainst }}</td>
                 </tr>
             </tbody>
             </table>
@@ -39,7 +52,12 @@
         var app = new Vue({
             el: '#app',
             data: {
-                standings: []
+                alEast: [],
+                alCent: [],
+                alWest: [],
+                nlEast: [],
+                nlCent: [],
+                nlWest: []
             },
             async mounted(){
                     const sheet_id = "1luuOd521eQkswAEal2J8qZGfzeVepo4mvT632CydpNE"
@@ -57,7 +75,7 @@
 
                         }
                     })
-                    this.standings = objs;
+                    this.alEast = objs.filter(team => team.division == 'AL East');
             }
         });
 
