@@ -29,96 +29,28 @@
 
     <div id="app"> 
     <div class="container">
-        <table class="table text-center">
-                <!-- AL east -->
+        <table v-for = "(rows, division) in divisions" class="table text-center">
                 <tr class="thead-light">
-                <th scope="col">AL East</th>
-                <th scope="col">Wins</th>
-                <th scope="col">Losses</th>
-                <th scope="col">Runs Scored</th>
-                <th scope="col">Runs Against</th>
+                <th scope="col">{{ division }}</th>
+                <th scope="col" title="Wins">W</th>
+                <th scope="col" title="Losses">L</th>
+                <th scope="col" title="Games Back">GB</th>
+                <th scope="col" title="Runs Scored">RS</th>
+                <th scope="col" title="Runs Allowed">RA</th>
+                <th scope="col" title="Run Differential">DIFF</th>
+                <th scope="col" title="Expected Win-Loss Record based on Runs Scored and Runs Allowed">X-W/L</th>
                 </tr>
-                <tr v-for="item in divisions.alEast">
-                <td scope="row">{{ item.team }}</td>
+                <tr v-for="item in rows">
+                <td scope="row" class="text-left"> <span>
+                    <img class="p-logo p-logo--sm" :src="item.logoUrl" title="NY Yankees">
+                </span><span class="team-name">{{ item.team }}</span></td>
                 <td>{{ item.wins }}</td>
                 <td>{{ item.losses }}</td>
+                <td>{{ item.gamesBack == 0 ? "-" : item.gamesBack }}</td>
                 <td>{{ item.runs }}</td>
-                <td>{{ item.runsAgainst }}</td>
-                </tr>
-                <!-- AL Central -->
-                <tr class="thead-light">
-                <th scope="col">AL Central</th>
-                <th scope="col">Wins</th>
-                <th scope="col">Losses</th>
-                <th scope="col">Runs Scored</th>
-                <th scope="col">Runs Against</th>
-                </tr>
-                <tr v-for="item in divisions.alCent">
-                <td scope="row">{{ item.team }}</td>
-                <td>{{ item.wins }}</td>
-                <td>{{ item.losses }}</td>
-                <td>{{ item.runs }}</td>
-                <td>{{ item.runsAgainst }}</td>
-                </tr>
-                <!-- AL West -->
-                <tr class="thead-light">
-                <th scope="col">AL West</th>
-                <th scope="col">Wins</th>
-                <th scope="col">Losses</th>
-                <th scope="col">Runs Scored</th>
-                <th scope="col">Runs Against</th>
-                </tr>
-                <tr v-for="item in divisions.alWest">
-                <td scope="row">{{ item.team }}</td>
-                <td>{{ item.wins }}</td>
-                <td>{{ item.losses }}</td>
-                <td>{{ item.runs }}</td>
-                <td>{{ item.runsAgainst }}</td>
-                </tr>
-                <!-- NL east -->
-                <tr class="thead-light">
-                <th scope="col">NL East</th>
-                <th scope="col">Wins</th>
-                <th scope="col">Losses</th>
-                <th scope="col">Runs Scored</th>
-                <th scope="col">Runs Against</th>
-                </tr>
-                <tr v-for="item in divisions.nlEast">
-                <td scope="row">{{ item.team }}</td>
-                <td>{{ item.wins }}</td>
-                <td>{{ item.losses }}</td>
-                <td>{{ item.runs }}</td>
-                <td>{{ item.runsAgainst }}</td>
-                </tr>
-                <!-- NL Central -->
-                <tr class="thead-light">
-                <th scope="col">NL Central</th>
-                <th scope="col">Wins</th>
-                <th scope="col">Losses</th>
-                <th scope="col">Runs Scored</th>
-                <th scope="col">Runs Against</th>
-                </tr>
-                <tr v-for="item in divisions.nlCent">
-                <td scope="row">{{ item.team }}</td>
-                <td>{{ item.wins }}</td>
-                <td>{{ item.losses }}</td>
-                <td>{{ item.runs }}</td>
-                <td>{{ item.runsAgainst }}</td>
-                </tr>
-                <!-- NL West -->
-                <tr class="thead-light">
-                <th scope="col">NL West</th>
-                <th scope="col">Wins</th>
-                <th scope="col">Losses</th>
-                <th scope="col">Runs Scored</th>
-                <th scope="col">Runs Against</th>
-                </tr>
-                <tr v-for="item in divisions.nlWest">
-                <td scope="row">{{ item.team }}</td>
-                <td>{{ item.wins }}</td>
-                <td>{{ item.losses }}</td>
-                <td>{{ item.runs }}</td>
-                <td>{{ item.runsAgainst }}</td>
+                <td>{{ item.runsAllowed }}</td>
+                <td>{{ item.diff }}</td>
+                <td>{{ item.expectedWins }}-{{ item.expectedLosses }}</td>
                 </tr>
             </tbody>
             </table>
@@ -131,18 +63,18 @@
             el: '#app',
             data: {
                 divisions: {
-                    alEast: [],
-                    alCent: [],
-                    alWest: [],
-                    nlEast: [],
-                    nlCent: [],
-                    nlWest: []
+                    "AL East":      ["loading..."],
+                    "AL Central":   ["loading..."],
+                    "AL West":      ["loading..."],
+                    "NL East":      ["loading..."],
+                    "NL Central":   ["loading..."],
+                    "NL West":      ["loading..."]
                 }
             },
             async mounted(){
                     const sheet_id = "1luuOd521eQkswAEal2J8qZGfzeVepo4mvT632CydpNE"
                 
-                    let response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/standings!A2:F31?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
+                    let response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/standings!A2:M31?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
                     let data = await response.json()
                     let objs = data.values.map(x => {
                         return {
@@ -150,17 +82,23 @@
                             team: x[1],
                             wins: x[2],
                             losses: x[3],
-                            runs: x[4],
-                            runsAgainst: x[5]
-
+                            pct: x[4],
+                            gamesBack: x[5],
+                            runs: x[6],
+                            runsAllowed: x[7],
+                            diff: x[8],
+                            pyth_pct: x[9],
+                            expectedWins: x[10],
+                            expectedLosses: x[11],
+                            logoUrl: x[12]
                         }
                     })
-                    this.divisions["alEast"] = objs.filter(team => team.division == 'AL East');
-                    this.divisions["alCent"] = objs.filter(team => team.division == 'AL Central');
-                    this.divisions["alWest"] = objs.filter(team => team.division == 'AL West');
-                    this.divisions["nlEast"] = objs.filter(team => team.division == 'NL East');
-                    this.divisions["nlCent"] = objs.filter(team => team.division == 'NL Central');
-                    this.divisions["nlWest"] = objs.filter(team => team.division == 'NL West');
+                    this.divisions["AL East"] = objs.filter(team => team.division == 'AL East');
+                    this.divisions["AL Central"] = objs.filter(team => team.division == 'AL Central');
+                    this.divisions["AL West"] = objs.filter(team => team.division == 'AL West');
+                    this.divisions["NL East"] = objs.filter(team => team.division == 'NL East');
+                    this.divisions["NL Central"] = objs.filter(team => team.division == 'NL Central');
+                    this.divisions["NL West"] = objs.filter(team => team.division == 'NL West');
             }
         });
     </script>

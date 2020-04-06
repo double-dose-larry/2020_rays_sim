@@ -57,3 +57,25 @@ header .overlay {
   width: 10%;
   height: auto; 
 }
+
+
+.p-logo--sm {
+	height: 2rem;
+	width: 2rem;
+}
+
+.p-logo {
+	height: 2rem;
+	width: 2rem;
+  vertical-align: center;
+  margin-right: 10px;
+}
+
+.col {
+  text-align: left;
+}
+
+.team-name {
+  font-family: Arial, Helvetica, sans-serif;
+  display: inline-block;
+}
