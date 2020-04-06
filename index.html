@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>2020 Rays Sim Standings and Results</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="banner">
+        <!-- <h1>2020 Rays Sim standings</h1> -->
+    </div>
+
+    <div id="app"> 
+        <table class="table">
+            <thead class="thead-light">
+                <tr>
+                <th scope="col">Division</th>
+                <th scope="col">Team</th>
+                <th scope="col">Wins</th>
+                <th scope="col">Losses</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="item in standings">
+                <th scope="row">{{ item.division }} </th>
+                <td>{{ item.team }}</td>
+                <td>{{ item.wins }}</td>
+                <td>{{ item.losses }}</td>
+                </tr>
+            </tbody>
+            </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                standings: []
+            },
+            async mounted(){
+                    const sheet_id = "1luuOd521eQkswAEal2J8qZGfzeVepo4mvT632CydpNE"
+                
+                    let response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/standings!A2:F31?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
+                    let data = await response.json()
+                    let objs = data.values.map(x => {
+                        return {
+                            division: x[0],
+                            team: x[1],
+                            wins: x[2],
+                            losses: x[3],
+                            runs: x[4],
+                            runsAgainst: x[5]
+
+                        }
+                    })
+                    this.standings = objs;
+            }
+        });
+
+        const out = document.querySelector('.output');
+        
+        async function getDataAsync() {
+            const sheet_id = "1luuOd521eQkswAEal2J8qZGfzeVepo4mvT632CydpNE"
+            
+            let response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/schedule!A2:F31?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
+            let data = await response.json()
+            return data
+        }
+            
+        getDataAsync().then(data => {
+            // update DOM here
+            console.log(data);
+        })
+
+    </script>
+</body>
+</html>
