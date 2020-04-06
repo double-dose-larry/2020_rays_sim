@@ -17,26 +17,103 @@
     <div class="container h-100">
         <div class="d-flex h-100 text-center align-items-center">
         <div class="w-100 text-white">
-            <h1 class="display-3"> <a href="https://www.youtube.com/channel/UCSwicur-zd57UFxhLWMdDMg/videos" style="text-decoration: none; color:whitesmoke; font-family:Arial, Helvetica, sans-serif;">2020 Rays Sim</a></h1>
-            <p class="lead mb-0">Current Standings for 2020 Rays Sim</p>
+            <div class="logo-container">
+                <img src="https://content.sportslogos.net/logos/53/2535/full/qiru2jftx1a378eq8ad0s4ik4.gif" alt="">
+            <h1 class="display-3"> 
+                <a href="https://www.youtube.com/channel/UCSwicur-zd57UFxhLWMdDMg/videos" style="text-decoration: none; color:whitesmoke;">2020 Rays Sim Standings</a></h1>
+            </div>
         </div>
         </div>
     </div>
     </header>
 
     <div id="app"> 
-        <table class="table">
-            <thead class="thead-light">
-                <tr>
-                <th scope="col">Team</th>
+    <div class="container">
+        <table class="table text-center">
+                <!-- AL east -->
+                <tr class="thead-light">
+                <th scope="col">AL East</th>
                 <th scope="col">Wins</th>
                 <th scope="col">Losses</th>
                 <th scope="col">Runs Scored</th>
                 <th scope="col">Runs Against</th>
                 </tr>
-            </thead>
-            <tbody>
-                <tr v-for="item in alEast">
+                <tr v-for="item in divisions.alEast">
+                <td scope="row">{{ item.team }}</td>
+                <td>{{ item.wins }}</td>
+                <td>{{ item.losses }}</td>
+                <td>{{ item.runs }}</td>
+                <td>{{ item.runsAgainst }}</td>
+                </tr>
+                <!-- AL Central -->
+                <tr class="thead-light">
+                <th scope="col">AL Central</th>
+                <th scope="col">Wins</th>
+                <th scope="col">Losses</th>
+                <th scope="col">Runs Scored</th>
+                <th scope="col">Runs Against</th>
+                </tr>
+                <tr v-for="item in divisions.alCent">
+                <td scope="row">{{ item.team }}</td>
+                <td>{{ item.wins }}</td>
+                <td>{{ item.losses }}</td>
+                <td>{{ item.runs }}</td>
+                <td>{{ item.runsAgainst }}</td>
+                </tr>
+                <!-- AL West -->
+                <tr class="thead-light">
+                <th scope="col">AL West</th>
+                <th scope="col">Wins</th>
+                <th scope="col">Losses</th>
+                <th scope="col">Runs Scored</th>
+                <th scope="col">Runs Against</th>
+                </tr>
+                <tr v-for="item in divisions.alWest">
+                <td scope="row">{{ item.team }}</td>
+                <td>{{ item.wins }}</td>
+                <td>{{ item.losses }}</td>
+                <td>{{ item.runs }}</td>
+                <td>{{ item.runsAgainst }}</td>
+                </tr>
+                <!-- NL east -->
+                <tr class="thead-light">
+                <th scope="col">NL East</th>
+                <th scope="col">Wins</th>
+                <th scope="col">Losses</th>
+                <th scope="col">Runs Scored</th>
+                <th scope="col">Runs Against</th>
+                </tr>
+                <tr v-for="item in divisions.nlEast">
+                <td scope="row">{{ item.team }}</td>
+                <td>{{ item.wins }}</td>
+                <td>{{ item.losses }}</td>
+                <td>{{ item.runs }}</td>
+                <td>{{ item.runsAgainst }}</td>
+                </tr>
+                <!-- NL Central -->
+                <tr class="thead-light">
+                <th scope="col">NL Central</th>
+                <th scope="col">Wins</th>
+                <th scope="col">Losses</th>
+                <th scope="col">Runs Scored</th>
+                <th scope="col">Runs Against</th>
+                </tr>
+                <tr v-for="item in divisions.nlCent">
+                <td scope="row">{{ item.team }}</td>
+                <td>{{ item.wins }}</td>
+                <td>{{ item.losses }}</td>
+                <td>{{ item.runs }}</td>
+                <td>{{ item.runsAgainst }}</td>
+                </tr>
+                <!-- NL West -->
+                <tr class="thead-light">
+                <th scope="col">NL West</th>
+                <th scope="col">Wins</th>
+                <th scope="col">Losses</th>
+                <th scope="col">Runs Scored</th>
+                <th scope="col">Runs Against</th>
+                </tr>
+                <tr v-for="item in divisions.nlWest">
                 <td scope="row">{{ item.team }}</td>
                 <td>{{ item.wins }}</td>
                 <td>{{ item.losses }}</td>
@@ -45,6 +122,7 @@
                 </tr>
             </tbody>
             </table>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/vue"></script>
@@ -52,12 +130,14 @@
         var app = new Vue({
             el: '#app',
             data: {
-                alEast: [],
-                alCent: [],
-                alWest: [],
-                nlEast: [],
-                nlCent: [],
-                nlWest: []
+                divisions: {
+                    alEast: [],
+                    alCent: [],
+                    alWest: [],
+                    nlEast: [],
+                    nlCent: [],
+                    nlWest: []
+                }
             },
             async mounted(){
                     const sheet_id = "1luuOd521eQkswAEal2J8qZGfzeVepo4mvT632CydpNE"
@@ -75,25 +155,14 @@
 
                         }
                     })
-                    this.alEast = objs.filter(team => team.division == 'AL East');
+                    this.divisions["alEast"] = objs.filter(team => team.division == 'AL East');
+                    this.divisions["alCent"] = objs.filter(team => team.division == 'AL Central');
+                    this.divisions["alWest"] = objs.filter(team => team.division == 'AL West');
+                    this.divisions["nlEast"] = objs.filter(team => team.division == 'NL East');
+                    this.divisions["nlCent"] = objs.filter(team => team.division == 'NL Central');
+                    this.divisions["nlWest"] = objs.filter(team => team.division == 'NL West');
             }
         });
-
-        const out = document.querySelector('.output');
-        
-        async function getDataAsync() {
-            const sheet_id = "1luuOd521eQkswAEal2J8qZGfzeVepo4mvT632CydpNE"
-            
-            let response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/schedule!A2:F31?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
-            let data = await response.json()
-            return data
-        }
-            
-        getDataAsync().then(data => {
-            // update DOM here
-            console.log(data);
-        })
-
     </script>
 </body>
 </html>
