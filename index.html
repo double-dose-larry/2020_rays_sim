@@ -64,6 +64,7 @@
                 <th scope="col" class="col-3">{{ division }}</th>
                 <th scope="col" class="col-1" title="Wins">W</th>
                 <th scope="col" class="col-1" title="Losses">L</th>
+                <th scope="col" class="col-1" title="Winning Percentage">PCT</th>
                 <th scope="col" class="col-1" title="Games Back">GB</th>
                 <th scope="col" class="col-1" title="Runs Scored">RS</th>
                 <th scope="col" class="col-1" title="Runs Allowed">RA</th>
@@ -77,6 +78,7 @@
                 </span><span class="team-name">{{ item.team }}</span></td>
                 <td>{{ item.wins }}</td>
                 <td>{{ item.losses }}</td>
+                <td>{{ item.pct }}</td>
                 <td>{{ item.gamesBack == 0 ? "-" : item.gamesBack }}</td>
                 <td>{{ item.runs }}</td>
                 <td>{{ item.runsAllowed }}</td>
@@ -107,7 +109,10 @@
                 
                     let response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/standings!A2:M31?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
                     let data = await response.json()
-                    let objs = data.values.map(x => {
+                    values = data.values.sort( (a,b) => {
+                        return a[4] < b[4]
+                    });
+                    let objs = values.map(x => {
                         return {
                             division: x[0],
                             team: x[1],
@@ -150,13 +155,16 @@
 
                 let lastGame = schedObjs.reduce((lastGame, currentGame) => {
                         if (currentGame.highlightUrl)  {
-                            return currentGame;
+                            if (new Date(currentGame.date) > new Date(lastGame.date)){
+                                return currentGame;
+                            } else {
+                                return lastGame;
+                            }
                         } else {
                             return lastGame;
                         }
-                    },"help")
-                // console.log(lastGame)
-                this.lastGame = lastGame
+                    }, {date: '1/1/1900'})
+                this.lastGame = lastGame;
             }
         });
     </script>
