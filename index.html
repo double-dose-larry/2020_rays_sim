@@ -154,7 +154,7 @@
                     })
 
                 let lastGame = schedObjs.reduce((lastGame, currentGame) => {
-                        if (currentGame.highlightUrl)  {
+                        if (currentGame.highlightUrl || currentGame.fullGameUrl)  {
                             if (new Date(currentGame.date) > new Date(lastGame.date)){
                                 return currentGame;
                             } else {
