@@ -9,7 +9,7 @@
 </head>
 <body>
 
-    <header>
+    <header class="container">
     <div class="overlay"></div>
     <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
         <source src="https://raw.githubusercontent.com/double-dose-larry/2020_rays_sim/master/rnsdeg.mp4" type="video/mp4">
@@ -29,20 +29,46 @@
 
     <div id="app"> 
     <div class="container">
+        <!-- last game -->
+        <div class="card col-lg-6 col-xs-9" style="margin:auto; margin-top: 20px; margin-bottom: 20px">
+            <div class="card-header">Last Rays Game - {{lastGame.date}}</div>
+            <div class="card-body">
+                <table class="table text-center" style="display:inline-table; width:80%; margin-left: 20px">
+                    <tr>
+                        <td>{{ lastGame.awayTeam }} </td>
+                        <td class="font-weight-bold">{{ lastGame.awayScore }} </td>
+                    </tr>
+                    <tr>
+                        <td>{{ lastGame.homeTeam }} </td>
+                        <td class="font-weight-bold">{{ lastGame.homeScore }} </td>
+                    </tr>
+                </table>
+                <span style="display:inline;">
+                    F {{ lastGame.innings}}
+                </span>
+                <br>
+                <a :href="lastGame.highlightUrl" class="card-link">Highlights</a>
+                <a :href="lastGame.fullGameUrl" class="card-link">Full Game</a>
+
+            </div>
+        </div>
+        <!-- standings -->
         <table v-for = "(rows, division) in divisions" class="table text-center">
+            <thead>
                 <tr class="thead-light">
-                <th scope="col">{{ division }}</th>
-                <th scope="col" title="Wins">W</th>
-                <th scope="col" title="Losses">L</th>
-                <th scope="col" title="Games Back">GB</th>
-                <th scope="col" title="Runs Scored">RS</th>
-                <th scope="col" title="Runs Allowed">RA</th>
-                <th scope="col" title="Run Differential">DIFF</th>
-                <th scope="col" title="Expected Win-Loss Record based on Runs Scored and Runs Allowed">X-W/L</th>
+                <th scope="col" class="col-3">{{ division }}</th>
+                <th scope="col" class="col-1" title="Wins">W</th>
+                <th scope="col" class="col-1" title="Losses">L</th>
+                <th scope="col" class="col-1" title="Games Back">GB</th>
+                <th scope="col" class="col-1" title="Runs Scored">RS</th>
+                <th scope="col" class="col-1" title="Runs Allowed">RA</th>
+                <th scope="col" class="col-1" title="Run Differential">DIFF</th>
+                <th scope="col" class="col-1" title="Expected Win-Loss Record based on Runs Scored and Runs Allowed">X-W/L</th>
                 </tr>
+            </thead>
                 <tr v-for="item in rows">
                 <td scope="row" class="text-left"> <span>
-                    <img class="p-logo p-logo--sm" :src="item.logoUrl" title="NY Yankees">
+                    <img class="p-logo p-logo--sm" :src="item.logoUrl">
                 </span><span class="team-name">{{ item.team }}</span></td>
                 <td>{{ item.wins }}</td>
                 <td>{{ item.losses }}</td>
@@ -69,7 +95,8 @@
                     "NL East":      ["loading..."],
                     "NL Central":   ["loading..."],
                     "NL West":      ["loading..."]
-                }
+                },
+                lastGame: {}
             },
             async mounted(){
                     const sheet_id = "1luuOd521eQkswAEal2J8qZGfzeVepo4mvT632CydpNE"
@@ -99,6 +126,30 @@
                     this.divisions["NL East"] = objs.filter(team => team.division == 'NL East');
                     this.divisions["NL Central"] = objs.filter(team => team.division == 'NL Central');
                     this.divisions["NL West"] = objs.filter(team => team.division == 'NL West');
+                    //get last Rays game
+                    let scheduleRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/schedule!A2:J2432?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
+                    let scheduleData = await scheduleRes.json()
+                    let schedObjs = scheduleData.values.map(x => {
+                       return {
+                        date: x[0],
+                        homeTeam: x[1],
+                        awayTeam: x[2],
+                        homeScore: x[3],
+                        awayScore: x[4],
+                        innings: x[7],
+                        highlightUrl: x[8],
+                        fullGameUrl: x[9]
+                       }
+                    })
+
+                let lastGame = schedObjs.reduce((lastGame, currentGame) => {
+                        if (currentGame.highlightUrl)  {
+                            return currentGame;
+                        } else {
+                            return lastGame;
+                        }
+                    },"help")
+                this.lastGame = lastGame
             }
         });
     </script>
