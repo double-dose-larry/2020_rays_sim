@@ -28,12 +28,7 @@
     <!-- Required scripts -->
     <script src="https://unpkg.com/vue@latest/dist/vue.js"></script>
     <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
-    <style>
 
-      .p-logo {
-        width: 1.5rem;
-      }
-    </style>
   </head>
   <body>
         <header class="container">
@@ -59,28 +54,28 @@
         <b-card 
           class="mx-auto my-5 col-9 ">
           <b-card-text>
-            <div class="card-header">Last Rays Game - {{lastGame.date}}</div>
-          <table class="table text-center" style="display:inline-table; width:80%; margin-left: 20px">
-    <tr>
-        <td class="team-name">
-        <img class="p-logo" :src="lastGame.awayLogoUrl">
-            {{ lastGame.awayTeam }} </td>
-        <td class="font-weight-bold">{{ lastGame.awayScore }} </td>
-    </tr>
-    <tr>
-        <td class="team-name">
-        <img class="p-logo" :src="lastGame.homeLogoUrl">
-            {{ lastGame.homeTeam }} </td>
-        <td class="font-weight-bold">{{ lastGame.homeScore }} </td>
-    </tr>
-</table>
-    <span style="display:inline;">
-        F {{ lastGame.innings }}
-    </span>
-    <br>
-    <a :href="lastGame.highlightUrl" class="card-link">Highlights</a>
-    <a :href="lastGame.fullGameUrl" class="card-link">Full Game</a>
-</b-card-text>
+            <b-card-header>Last Rays Game - {{lastGame.date}}</b-card-header>
+            <table class="table text-center" style="display:inline-table; width:80%; margin-left: 20px">
+            <tr>
+              <td class="team-name">
+              <img class="p-logo" :src="lastGame.awayLogoUrl">
+                  {{ lastGame.awayTeam }} </td>
+              <td class="font-weight-bold">{{ lastGame.awayScore }} </td>
+            </tr>
+            <tr>
+              <td class="team-name">
+              <img class="p-logo" :src="lastGame.homeLogoUrl">
+                  {{ lastGame.homeTeam }} </td>
+              <td class="font-weight-bold">{{ lastGame.homeScore }} </td>
+            </tr>
+            </table>
+            <span style="display:inline;">
+                F {{ lastGame.innings }}
+            </span>
+            <br>
+            <a :href="lastGame.highlightUrl" class="card-link">Highlights</a>
+            <a :href="lastGame.fullGameUrl" class="card-link">Full Game</a>
+          </b-card-text>
         </b-card>
 
 
@@ -102,28 +97,28 @@
 
             </b-table>
           </b-tab>
-          <b-tab title="Schedule">
-            <b-form-select
-              v-model="schedTeam"
-              :options="distinctTeams">
-            </b-form-select>
-            <b-pagination
-              v-model="currentPage"
-              total-rows=162
-              aria-controls="schedTable"
-              class="mt-4"></b-pagination>
-            <b-table
-              id="schedTable"
-              :items="allSched"
-              filterOn="['homeTeam','awayTeam']"
-              :filter="schedTeam"
-              sort-by="date"
-              :sort-asc="sortDesc"
-              :fields="schedFields"
-              :per-page="perPage"
-              :current-page="currentPage"
-            >
-            </b-table>
+          <b-tab title="Schedule"></b-tab>
+            <b-card
+              v-for="game in allSched"
+              class="m-2 p-0">
+              <b-card-header>
+                {{ game.date }}
+              </b-card-header>
+              <b-card-text>
+                <table class=table>
+                  <tr>
+                    <td>{{ game.awayTeam }}</td>
+                    <td>{{ game.awayScore }}</td>
+                  </tr>
+                  <tr>
+                    <td>{{ game.homeTeam }}</td>
+                    <td> {{ game.homeScore }}</td>
+                  </tr>
+                </table>
+                <a v-if="game.highlightUrl" :href="game.highlightUrl" class="card-link">Highlights</a>
+                <a v-if="game.fullGameUrl" :href="game.fullGameUrl" class="card-link">Full Game</a>
+              </b-card-text>
+            </b-card>
           </b-tab>
           <b-tab title="Stats">
           <b-container class="py-5 my-5">
@@ -167,7 +162,7 @@
           sortBy: "pct",
           sortDesc: true,
           schedTeam: "Tampa Bay Rays",
-          perPage: 20,
+          perPage: 15,
           currentPage: 1,
           items: [],
           distinctTeams: [],
@@ -214,8 +209,8 @@
               homeLogoUrl: x[10],
               awayLogoUrl: x[11]
              }
-          })
-          this.allSched = schedObjs;
+          });
+          this.allSched = schedObjs.filter( x => x.homeTeam == 'Tampa Bay Rays' || x.awayTeam == 'Tampa Bay Rays');
           let lastGame = schedObjs.reduce((lastGame, currentGame) => {
                   if (currentGame.highlightUrl || currentGame.fullGameUrl)  {
                       if (new Date(currentGame.date) > new Date(lastGame.date)){
