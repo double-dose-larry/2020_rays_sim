@@ -1,16 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2020 Rays Sim Standings and Results</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
-</head>
-<body>
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
 
-    <header class="container">
+    <title>2020 Rays Sim</title>
+
+    <!-- Required Stylesheets -->
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap/dist/css/bootstrap.min.css"
+    />
+    <link
+      type="text/css"
+      rel="stylesheet"
+      href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css"
+    />
+
+        <link rel="stylesheet" href="style.css">
+
+    <!-- Load polyfills to support older browsers -->
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver"></script>
+
+    <!-- Required scripts -->
+    <script src="https://unpkg.com/vue@latest/dist/vue.js"></script>
+    <script src="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
+    <style>
+
+      .p-logo {
+        width: 1.5rem;
+      }
+    </style>
+  </head>
+  <body>
+        <header class="container">
     <div class="overlay"></div>
     <video playsinline="playsinline" autoplay="autoplay" muted="muted" loop="loop">
         <source src="https://raw.githubusercontent.com/double-dose-larry/2020_rays_sim/master/rnsdeg.mp4" type="video/mp4">
@@ -26,147 +52,181 @@
         </div>
         </div>
     </div>
-    </header>
-
-    <div id="app"> 
-    <div class="container">
-        <!-- last game -->
-        <div class="card col-lg-6 col-xs-9" style="margin:auto; margin-top: 20px; margin-bottom: 20px">
+    </header
+    <!-- Our application root element -->
+    <div id="app">
+      <b-container>
+        <b-card 
+          class="mx-auto my-5 col-9 ">
+          <b-card-text>
             <div class="card-header">Last Rays Game - {{lastGame.date}}</div>
-            <div class="card-body">
-                <table class="table text-center" style="display:inline-table; width:80%; margin-left: 20px">
-                    <tr>
-                        <td class="team-name">
-                        <img class="p-logo" :src="lastGame.awayLogoUrl">
-                            {{ lastGame.awayTeam }} </td>
-                        <td class="font-weight-bold">{{ lastGame.awayScore }} </td>
-                    </tr>
-                    <tr>
-                        <td class="team-name">
-                        <img class="p-logo" :src="lastGame.homeLogoUrl">
-                            {{ lastGame.homeTeam }} </td>
-                        <td class="font-weight-bold">{{ lastGame.homeScore }} </td>
-                    </tr>
-                </table>
-                <span style="display:inline;">
-                    F {{ lastGame.innings}}
-                </span>
-                <br>
-                <a :href="lastGame.highlightUrl" class="card-link">Highlights</a>
-                <a :href="lastGame.fullGameUrl" class="card-link">Full Game</a>
+          <table class="table text-center" style="display:inline-table; width:80%; margin-left: 20px">
+    <tr>
+        <td class="team-name">
+        <img class="p-logo" :src="lastGame.awayLogoUrl">
+            {{ lastGame.awayTeam }} </td>
+        <td class="font-weight-bold">{{ lastGame.awayScore }} </td>
+    </tr>
+    <tr>
+        <td class="team-name">
+        <img class="p-logo" :src="lastGame.homeLogoUrl">
+            {{ lastGame.homeTeam }} </td>
+        <td class="font-weight-bold">{{ lastGame.homeScore }} </td>
+    </tr>
+</table>
+    <span style="display:inline;">
+        F {{ lastGame.innings }}
+    </span>
+    <br>
+    <a :href="lastGame.highlightUrl" class="card-link">Highlights</a>
+    <a :href="lastGame.fullGameUrl" class="card-link">Full Game</a>
+</b-card-text>
+        </b-card>
 
-            </div>
-        </div>
-        <!-- standings -->
-        <table v-for = "(rows, division) in divisions" class="table text-center">
-            <thead>
-                <tr class="thead-light">
-                <th scope="col" class="col-3">{{ division }}</th>
-                <th scope="col" class="col-1" title="Wins">W</th>
-                <th scope="col" class="col-1" title="Losses">L</th>
-                <th scope="col" class="col-1" title="Winning Percentage">PCT</th>
-                <th scope="col" class="col-1" title="Games Back">GB</th>
-                <th scope="col" class="col-1" title="Runs Scored">RS</th>
-                <th scope="col" class="col-1" title="Runs Allowed">RA</th>
-                <th scope="col" class="col-1" title="Run Differential">DIFF</th>
-                <th scope="col" class="col-1" title="Expected Win-Loss Record based on Runs Scored and Runs Allowed">X-W/L</th>
-                </tr>
-            </thead>
-                <tr v-for="item in rows">
-                <td scope="row" class="text-left"> <span>
-                    <img class="p-logo p-logo--sm" :src="item.logoUrl">
-                </span><span class="team-name">{{ item.team }}</span></td>
-                <td>{{ item.wins }}</td>
-                <td>{{ item.losses }}</td>
-                <td>{{ item.pct }}</td>
-                <td>{{ item.gamesBack == 0 ? "-" : item.gamesBack }}</td>
-                <td>{{ item.runs }}</td>
-                <td>{{ item.runsAllowed }}</td>
-                <td>{{ item.diff }}</td>
-                <td>{{ item.expectedWins }}-{{ item.expectedLosses }}</td>
-                </tr>
-            </tbody>
-            </table>
-        </div>
+
+        <b-tabs content-class="mt-4">
+          <b-tab title="Standings" active>
+            <b-table 
+              class="text-center"
+              v-for="division in divisions" :items="items.filter(div => div.division == division)"
+              :fields="fields"
+              :sort-by.sync="sortBy"
+              :sort-desc.sync="sortDesc"
+              sort-icon-right
+            >
+              <template v-slot:head(team)="data">{{ division }}</template>
+              <template v-slot:cell(team)="data">
+               <img class="p-logo" :src="data.item.logoUrl">
+                </span>{{ data.item.team }}
+              </template>
+
+            </b-table>
+          </b-tab>
+          <b-tab title="Schedule">
+            <b-form-select
+              v-model="schedTeam"
+              :options="distinctTeams">
+            </b-form-select>
+            <b-pagination
+              v-model="currentPage"
+              total-rows=162
+              aria-controls="schedTable"
+              class="mt-4"></b-pagination>
+            <b-table
+              id="schedTable"
+              :items="allSched"
+              filterOn="['homeTeam','awayTeam']"
+              :filter="schedTeam"
+              sort-by="date"
+              :sort-asc="sortDesc"
+              :fields="schedFields"
+              :per-page="perPage"
+              :current-page="currentPage"
+            >
+            </b-table>
+          </b-tab>
+          <b-tab title="Stats">
+          <b-container class="py-5 my-5">
+            coming soon
+          </b-container>
+          </b-tab>
+        </b-tabs>
+      </b-container>
     </div>
 
+    <!-- Start running your app -->
     <script>
-        var app = new Vue({
-            el: '#app',
-            data: {
-                divisions: {
-                    "AL East":      ["loading..."],
-                    "AL Central":   ["loading..."],
-                    "AL West":      ["loading..."],
-                    "NL East":      ["loading..."],
-                    "NL Central":   ["loading..."],
-                    "NL West":      ["loading..."]
-                },
-                lastGame: {date:'loading...'}
-            },
-            async mounted(){
-                    const sheet_id = "1luuOd521eQkswAEal2J8qZGfzeVepo4mvT632CydpNE"
-                
-                    let response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/standings!A2:M31?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
-                    let data = await response.json()
-                    values = data.values.sort( (a,b) => {
-                        return a[4] < b[4]
-                    });
-                    let objs = values.map(x => {
-                        return {
-                            division: x[0],
-                            team: x[1],
-                            wins: x[2],
-                            losses: x[3],
-                            pct: x[4],
-                            gamesBack: x[5],
-                            runs: x[6],
-                            runsAllowed: x[7],
-                            diff: x[8],
-                            pyth_pct: x[9],
-                            expectedWins: x[10],
-                            expectedLosses: x[11],
-                            logoUrl: x[12]
-                        }
-                    })
-                    this.divisions["AL East"] = objs.filter(team => team.division == 'AL East');
-                    this.divisions["AL Central"] = objs.filter(team => team.division == 'AL Central');
-                    this.divisions["AL West"] = objs.filter(team => team.division == 'AL West');
-                    this.divisions["NL East"] = objs.filter(team => team.division == 'NL East');
-                    this.divisions["NL Central"] = objs.filter(team => team.division == 'NL Central');
-                    this.divisions["NL West"] = objs.filter(team => team.division == 'NL West');
-                    //get last Rays game
-                    let scheduleRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/schedule!A2:L2432?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
-                    let scheduleData = await scheduleRes.json()
-                    let schedObjs = scheduleData.values.map(x => {
-                       return {
-                        date: x[0],
-                        homeTeam: x[1],
-                        awayTeam: x[2],
-                        homeScore: x[3],
-                        awayScore: x[4],
-                        innings: x[7],
-                        highlightUrl: x[8],
-                        fullGameUrl: x[9],
-                        homeLogoUrl: x[10],
-                        awayLogoUrl: x[11]
-                       }
-                    })
-
-                let lastGame = schedObjs.reduce((lastGame, currentGame) => {
-                        if (currentGame.highlightUrl || currentGame.fullGameUrl)  {
-                            if (new Date(currentGame.date) > new Date(lastGame.date)){
-                                return currentGame;
-                            } else {
-                                return lastGame;
-                            }
-                        } else {
-                            return lastGame;
-                        }
-                    }, {date: '1/1/1900'})
-                this.lastGame = lastGame;
-            }
-        });
+      window.app = new Vue({
+        el: '#app',
+        data: {
+          divisions: [
+            "AL East",
+            "AL Central",
+            "AL West",
+            "NL East",
+            "NL Central",
+            "NL West"
+          ],
+          fields: [
+            {key: "team", class: "text-left"},
+            "wins",
+            "losses",
+            "pct",
+            "gamesBack"
+          ],
+          schedFields: [
+            "date",
+            "homeTeam",
+            "awayTeam",
+            "homeScore",
+            "awayScore"
+          ],
+          sortBy: "pct",
+          sortDesc: true,
+          schedTeam: "Tampa Bay Rays",
+          perPage: 20,
+          currentPage: 1,
+          items: [],
+          distinctTeams: [],
+          allSched: [],
+          lastGame: {date:'loading...'}
+        },
+        async mounted(){
+          const sheet_id = "1luuOd521eQkswAEal2J8qZGfzeVepo4mvT632CydpNE"
+      
+          let response = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/standings!A2:M31?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
+          let data = await response.json()
+          let objs = data.values.map(x => {
+              return {
+                  division: x[0],
+                  team: x[1],
+                  wins: x[2],
+                  losses: x[3],
+                  pct: x[4],
+                  gamesBack: x[5],
+                  runs: x[6],
+                  runsAllowed: x[7],
+                  diff: x[8],
+                  pyth_pct: x[9],
+                  expectedWins: x[10],
+                  expectedLosses: x[11],
+                  logoUrl: x[12]
+              }
+          })
+          this.items = objs
+          this.distinctTeams = objs.map(x => x.team);
+          //get last Rays game
+          let scheduleRes = await fetch(`https://sheets.googleapis.com/v4/spreadsheets/${sheet_id}/values/schedule!A2:L2432?key=AIzaSyAX3YA2GKJtQLHg7BQ3j7pbtfjjqqq4140`)
+          let scheduleData = await scheduleRes.json()
+          let schedObjs = scheduleData.values.map(x => {
+             return {
+              date: x[0],
+              homeTeam: x[1],
+              awayTeam: x[2],
+              homeScore: x[3],
+              awayScore: x[4],
+              innings: x[7],
+              highlightUrl: x[8],
+              fullGameUrl: x[9],
+              homeLogoUrl: x[10],
+              awayLogoUrl: x[11]
+             }
+          })
+          this.allSched = schedObjs;
+          let lastGame = schedObjs.reduce((lastGame, currentGame) => {
+                  if (currentGame.highlightUrl || currentGame.fullGameUrl)  {
+                      if (new Date(currentGame.date) > new Date(lastGame.date)){
+                          return currentGame;
+                      } else {
+                          return lastGame;
+                      }
+                  } else {
+                      return lastGame;
+                  }
+              }, {date: '1/1/1900'})
+          this.lastGame = lastGame;
+      }
+    });
     </script>
-</body>
+  </body>
 </html>
