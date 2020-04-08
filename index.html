@@ -97,21 +97,36 @@
 
             </b-table>
           </b-tab>
-          <b-tab title="Schedule"></b-tab>
+          <b-tab title="Schedule and Results">
+            <b-form-select v-model="filterMonth" size="md" class="w-25">
+              <option :value="3">March</option>
+              <option :value="4">April</option>
+              <option :value="5">May</option>
+              <option :value="6">June</option>
+              <option :value="7">July</option>
+              <option :value="8">August</option>
+              <option :value="9">September</option>
+            </b-form-select>
+           <b-container class="mx-auto text-center">
             <b-card
-              v-for="game in allSched"
-              class="m-2 p-0">
+              v-for="game in allSched.filter(x=>x.date[0] == filterMonth)"
+              class="m-2 p-0 col-xs-12"
+              style="display:inline-table; min-width: 300px;">
               <b-card-header>
                 {{ game.date }}
               </b-card-header>
               <b-card-text>
                 <table class=table>
                   <tr>
-                    <td>{{ game.awayTeam }}</td>
+                    <td class="text-left">
+                      <img class="p-logo" :src="game.awayLogoUrl">
+                      {{ game.awayTeam }}</td>
                     <td>{{ game.awayScore }}</td>
                   </tr>
                   <tr>
-                    <td>{{ game.homeTeam }}</td>
+                    <td class="text-left">
+                      <img class="p-logo" :src="game.homeLogoUrl">
+                      {{ game.homeTeam }}</td>
                     <td> {{ game.homeScore }}</td>
                   </tr>
                 </table>
@@ -119,6 +134,7 @@
                 <a v-if="game.fullGameUrl" :href="game.fullGameUrl" class="card-link">Full Game</a>
               </b-card-text>
             </b-card>
+            </b-container>
           </b-tab>
           <b-tab title="Stats">
           <b-container class="py-5 my-5">
@@ -152,18 +168,9 @@
             "runsAllowed",
             "diff"
           ],
-          schedFields: [
-            "date",
-            "homeTeam",
-            "awayTeam",
-            "homeScore",
-            "awayScore"
-          ],
           sortBy: "pct",
           sortDesc: true,
-          schedTeam: "Tampa Bay Rays",
-          perPage: 15,
-          currentPage: 1,
+          filterMonth: '4',
           items: [],
           distinctTeams: [],
           allSched: [],
