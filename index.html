@@ -107,7 +107,7 @@
               <option :value="8">August</option>
               <option :value="9">September</option>
             </b-form-select>
-           <b-container class="mx-auto text-center">
+           <b-container class="mx-0 text-center">
             <b-card
               v-for="game in allSched.filter(x=>x.date[0] == filterMonth)"
               class="m-2 p-0 col-xs-12"
@@ -136,7 +136,7 @@
             </b-card>
             </b-container>
           </b-tab>
-          <b-tab title="Stats">
+          <b-tab title="Stats" disabled>
           <b-container class="py-5 my-5">
             coming soon
           </b-container>
