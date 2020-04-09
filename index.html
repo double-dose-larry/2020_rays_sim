@@ -53,8 +53,10 @@
       <b-container>
         <b-card 
           class="mx-auto my-5 col-9 ">
-          <b-card-text>
-            <b-card-header>Last Rays Game - {{lastGame.date}}</b-card-header>
+            <b-card-header>Last Rays Game - {{lastGame.date}}
+              <b-spinner v-if="loading"></b-spinner>
+            </b-card-header>
+            <b-card-body v-if="!loading">
             <table class="table text-center" style="display:inline-table; width:80%; margin-left: 20px">
             <tr>
               <td class="team-name">
@@ -75,11 +77,11 @@
             <br>
             <a :href="lastGame.highlightUrl" class="card-link">Highlights</a>
             <a :href="lastGame.fullGameUrl" class="card-link">Full Game</a>
-          </b-card-text>
+            </b-card-body>
         </b-card>
 
 
-        <b-tabs content-class="mt-4">
+        <b-tabs content-class="mt-4" v-if="!loading">
           <b-tab title="Standings" active>
             <b-table 
               class="text-center"
@@ -158,6 +160,7 @@
             "NL Central",
             "NL West"
           ],
+          loading: true,
           fields: [
             {key: "team", class: "text-left col-3"},
             "wins",
@@ -230,6 +233,7 @@
                   }
               }, {date: '1/1/1900'})
           this.lastGame = lastGame;
+          this.loading = false;
       }
     });
     </script>
