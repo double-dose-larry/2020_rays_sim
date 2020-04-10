@@ -75,8 +75,8 @@
                 F {{ lastGame.innings }}
             </span>
             <br>
-            <a v-if="lastGame.highlightUrl" :href="lastGame.highlightUrl" class="card-link">Highlights</a>
-            <a v-if="lastGame.fullGameUrl" :href="lastGame.fullGameUrl" class="card-link">Full Game</a>
+            <a v-if="lastGame.highlightUrl != ''" :href="lastGame.highlightUrl" class="card-link">Highlights</a>
+            <a v-if="lastGame.fullGameUrl != ''" :href="lastGame.fullGameUrl" class="card-link">Full Game</a>
             </b-card-body>
         </b-card>
 
@@ -232,6 +232,7 @@
                       return lastGame;
                   }
               }, {date: '1/1/1900'})
+          console.log(lastGame.highlightURL);
           this.lastGame = lastGame;
           this.loading = false;
       }
