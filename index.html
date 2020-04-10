@@ -96,7 +96,9 @@
                <img class="p-logo" :src="data.item.logoUrl">
                 </span>{{ data.item.team }}
               </template>
-
+              <template v-slot:cell(x-wl)="data">
+        {{ data.item.expectedWins }} - {{ data.item.expectedLosses }}
+      </template>
             </b-table>
           </b-tab>
           <b-tab title="Schedule and Results">
@@ -163,13 +165,14 @@
           loading: true,
           fields: [
             {key: "team", class: "text-left col-3"},
-            "wins",
-            "losses",
-            "pct",
-            "gamesBack",
-            "runs",
-            "runsAllowed",
-            "diff"
+            {key: "wins", label: "W", title:"Wins"},
+            {key: "losses", label:"L"},
+            {key: "pct", label:"PCT"},
+            {key: "gamesBack", label: "GB"},
+            {key: "runs", label:"R"},
+            {key: "runsAllowed", label:"RA"},
+            {key: "diff", label: "DIFF"},
+            {key: "x-wl", label: "X-W/L"}
           ],
           sortBy: "pct",
           sortDesc: true,
