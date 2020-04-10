@@ -99,6 +99,9 @@
               <template v-slot:cell(x-wl)="data">
         {{ data.item.expectedWins }} - {{ data.item.expectedLosses }}
       </template>
+      <template v-slot:cell(gamesBack)="data">
+          {{ data.item.gamesBack == 0 ? "-" : data.item.gamesBack}}
+      </template>
             </b-table>
           </b-tab>
           <b-tab title="Schedule and Results">
