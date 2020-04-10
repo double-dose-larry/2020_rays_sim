@@ -75,8 +75,8 @@
                 F {{ lastGame.innings }}
             </span>
             <br>
-            <a :href="lastGame.highlightUrl" class="card-link">Highlights</a>
-            <a :href="lastGame.fullGameUrl" class="card-link">Full Game</a>
+            <a v-if="lastGame.highlightUrl" :href="lastGame.highlightUrl" class="card-link">Highlights</a>
+            <a v-if="lastGame.fullGameUrl" :href="lastGame.fullGameUrl" class="card-link">Full Game</a>
             </b-card-body>
         </b-card>
 
